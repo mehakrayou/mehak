@@ -1,0 +1,185 @@
+Que 1)
+
+Forming a magic square:
+
+We define a magic square to be an n*n matrix of distinct positive integers from 1 to n^2  where the sum of any row, column, or diagonal of length n is always equal to the same number: the magic constant.
+
+You will be given a 3*3 matrix  of integers in the inclusive range [1,9] . We can convert any digit a to any other digit b in the range [1,9] at cost of |a-b|. Given , convert it into a magic square at minimal cost. Print this cost on a new line.
+
+
+Sol:
+
+#include <bits/stdc++.h>
+#include<cmath>
+
+using namespace std;
+
+int formingMagicSquare(vector < vector<int> > s) {
+    int d[8][3][3]={
+        {{8,1,6},{3,5,7},{4,9,2}},
+        {{6,1,8},{7,5,3},{2,9,4}},
+        {{4,9,2},{3,5,7},{8,1,6}},
+        {{2,9,4},{7,5,3},{6,1,8}},
+        {{8,3,4},{1,5,9},{6,7,2}},
+        {{4,3,8},{9,5,1},{2,7,6}},
+        {{6,7,2},{1,5,9},{8,3,4}},
+        {{2,7,6},{9,5,1},{4,3,8}}
+    };
+    int c[8],min1;
+    for(int k=0;k<8;k++)
+    {
+        c[k] = 0;
+      for(int i=0;i<3;i++)
+      {
+        for(int j=0;j<3;j++)
+        {
+            if(s[i][j]!=d[k][i][j])
+            {
+                c[k]+=abs(s[i][j]-d[k][i][j]);
+
+            }
+         }
+      }
+     
+
+
+    }
+    min1 = c[0];
+    for(int i=1;i<8;i++){
+        if(c[i]<min1)
+          {
+              min1=c[i];
+        }
+    }
+
+    return min1;
+}
+
+int main() {
+    vector< vector<int> > s(3,vector<int>(3));
+    for(int s_i = 0;s_i < 3;s_i++){
+       for(int s_j = 0;s_j < 3;s_j++){
+          cin >> s[s_i][s_j];
+       }
+    }
+    int result = formingMagicSquare(s);
+    cout << result << endl;
+    return 0;
+}
+
+
+Que 2)
+
+Climbing the leaderboard
+
+
+Sol:
+
+import math
+import os
+import random
+import re
+import sys
+
+# Complete the climbingLeaderboard function below.
+def climbingLeaderboard(scores, alice):
+    scores = sorted(list(set(scores)))
+    index = 0
+    rank_list = []
+    n = len(scores)
+    for i in alice:
+        while (n > index and i >= scores[index]):
+            index += 1
+        rank_list.append(n+1-index) 
+    return rank_list
+    
+
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    scores_count = int(input())
+
+    scores = list(map(int, input().rstrip().split()))
+
+    alice_count = int(input())
+
+    alice = list(map(int, input().rstrip().split()))
+
+    result = climbingLeaderboard(scores, alice)
+
+    fptr.write('\n'.join(map(str, result)))
+    fptr.write('\n')
+
+    fptr.close()
+
+
+Que 3)
+
+Matrix Layer Rotation
+
+
+Sol:
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+// Main algorithm: in order to rotate the whole matrix, we'll just rotate one ring at a time
+// We can do this in-place to achieve O(1) additional space complexity
+int main() {
+    int M, N, R;
+    cin>>M>>N>>R;
+    int **matrix = new int*[M];
+    for(int i = 0; i < M; i++) {
+        matrix[i] = new int[N];
+        for(int j = 0; j < N; j++) {
+            cin>>matrix[i][j];
+        }
+    }
+
+    int numRings = min(M,N)/2;
+    for(int i = 0; i < numRings; i++) {
+        // Subtract the number of 360 degree rotations from R
+        // A 360 degree rotation = rotating the same number of times as the perimeter of the current ring
+        int numRotations = R%(2*(M + N - 4*i) - 4);
+        for(int rotation = 0; rotation < numRotations; rotation++) {
+            // Rotate the ring (see the clockwise algorithm for an in-depth example of how this is done)
+            // Rotate top row
+            for(int j = i; j < N-i-1; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[i][j+1];
+                matrix[i][j+1] = tmp;
+            }
+            // Rotate right column
+            for(int j = i; j < M-i-1; j++) {
+                int tmp = matrix[j][N-i-1];
+                matrix[j][N-i-1] = matrix[j+1][N-i-1];
+                matrix[j+1][N-i-1] = tmp;
+            }
+            // Rotate bottom row
+            for(int j = N-i-1; j > i; j--) {
+                int tmp = matrix[M-i-1][j];
+                matrix[M-i-1][j] = matrix[M-i-1][j-1];
+                matrix[M-i-1][j-1] = tmp;
+            }
+            // Rotate left column
+            for(int j = M-i-1; j > i+1; j--) {
+                int tmp = matrix[j][i];
+                matrix[j][i] = matrix[j-1][i];
+                matrix[j-1][i] = tmp;
+            }
+        }
+    }
+    // Output final matrix
+    for(int i = 0; i < M; i++) {
+        for(int j = 0; j < N; j++) {
+            cout<<matrix[i][j]<<" ";
+        }
+        cout<<"\n";
+    }
+    return 0;
+}
+
